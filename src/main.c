@@ -9,7 +9,7 @@
 #include "common/callback.h"
 
 #define MAJOR_VER 0
-#define MINOR_VER 4
+#define MINOR_VER 5
 
 PSP_MODULE_INFO("hello-raehik", PSP_MODULE_USER, MAJOR_VER, MINOR_VER);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
