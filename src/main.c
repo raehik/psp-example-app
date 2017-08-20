@@ -3,55 +3,71 @@
 #include <pspdisplay.h>
 #include <pspctrl.h>
 
+#include <time.h>
+#include <stdlib.h>
+
 #include "common/callback.h"
 
 #define MAJOR_VER 0
-#define MINOR_VER 3
+#define MINOR_VER 4
 
 PSP_MODULE_INFO("hello-raehik", PSP_MODULE_USER, MAJOR_VER, MINOR_VER);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
 PSP_HEAP_SIZE_MAX();
 
-#define printf pspDebugScreenPrintf
+#define DEBUG_COLS 68
+#define DEBUG_ROWS 34
+#define SCR_WIDTH 480
+#define SCR_HEIGHT 272
+
+// convenient RGB -> decimal colour macro
+#define RGB(r, g, b) ((r)|((g)<<8)|((b)<<16))
+
+void setupDebugScreen() {
+    pspDebugScreenInit();
+    pspDebugScreenClearLineDisable();
+}
+
+void initialise() {
+    setupExitCallback();
+    srand(time(NULL));
+    setupDebugScreen();
+}
+
+void deinitialise() {
+    sceKernelExitGame();
+}
+
+void printAllCellIdentifiers(int cols, int rows) {
+    char char_as_str[2];
+    char_as_str[0] = '0';
+    char_as_str[1] = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            char_as_str[0] += 1;
+            char_as_str[0] = (rand() % 26) + 65;
+            if (i == 0) { char_as_str[0] = '0'; }
+            if (i == rows-1) { char_as_str[0] = '1'; }
+            pspDebugScreenPrintf(char_as_str);
+        }
+    }
+}
+
+void mainEventLoop() {
+    sceDisplayWaitVblankStart();
+    pspDebugScreenSetXY(0, 0);
+    printAllCellIdentifiers(DEBUG_COLS, DEBUG_ROWS);
+}
 
 int main() {
-    pspDebugScreenInit();
-    setupExitCallback();
-
-    SceCtrlData buttonInput;
-    sceCtrlSetSamplingCycle(0);
-    sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
+    initialise();
 
     int running = isRunning();
     while (running) {
+        mainEventLoop();
         running = isRunning();
-
-        pspDebugScreenSetXY(0, 0);
-        printf("Hello raehik!\n\n");
-        sceDisplayWaitVblankStart();
-        printf("analog x: %d\n", buttonInput.Lx);
-        printf("analog y: %d\n\n", buttonInput.Ly);
-
-        sceCtrlPeekBufferPositive(&buttonInput, 1);
-        if (buttonInput.Buttons != 0) {
-            if (buttonInput.Buttons & PSP_CTRL_START) {
-                printf("hit Start - exiting...");
-                running = 0;
-            }
-            if (buttonInput.Buttons & PSP_CTRL_SELECT)      printf("Select");
-            if (buttonInput.Buttons & PSP_CTRL_UP)          printf("Up");
-			if (buttonInput.Buttons & PSP_CTRL_DOWN)        printf("Down");
-			if (buttonInput.Buttons & PSP_CTRL_RIGHT)       printf("Right");
-			if (buttonInput.Buttons & PSP_CTRL_LEFT)        printf("Left");
-			if (buttonInput.Buttons & PSP_CTRL_CROSS)       printf("Cross");
-			if (buttonInput.Buttons & PSP_CTRL_CIRCLE)      printf("Circle");
-			if (buttonInput.Buttons & PSP_CTRL_SQUARE)      printf("Square");
-			if (buttonInput.Buttons & PSP_CTRL_TRIANGLE)    printf("Triangle");
-			if (buttonInput.Buttons & PSP_CTRL_LTRIGGER)    printf("L-trigger");
-			if (buttonInput.Buttons & PSP_CTRL_RTRIGGER)    printf("R-trigger");
-        }
     }
 
-    sceKernelExitGame();
+    deinitialise();
     return 0;
 }
