@@ -6,7 +6,7 @@
 #
 
 TARGET = hello-raehik
-OBJS   = src/main.o src/common/callback.o
+OBJS   = src/main.o src/common/callback.o src/controls.o
 
 PSP_FW_VERSION = 661
 
