@@ -5,8 +5,11 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "common/callback.h"
+#include "controls.h"
+#include "screen.h"
 
 #define MAJOR_VER 0
 #define MINOR_VER 5
@@ -31,6 +34,7 @@ void setupDebugScreen() {
 
 void initialise() {
     setupExitCallback();
+    initControls();
     srand(time(NULL));
     setupDebugScreen();
 }
@@ -48,26 +52,75 @@ void printAllCellIdentifiers(int cols, int rows) {
         for (int j = 0; j < cols; j++) {
             char_as_str[0] += 1;
             char_as_str[0] = (rand() % 26) + 65;
-            if (i == 0) { char_as_str[0] = '0'; }
-            if (i == rows-1) { char_as_str[0] = '1'; }
+            if (i == 0)           { char_as_str[0] = '.'; }
+            else if (i == rows-1) { char_as_str[0] = '.'; }
+            if (j == 0)           { char_as_str[0] = '.'; }
+            else if (j == cols-1) { char_as_str[0] = '.'; }
             pspDebugScreenPrintf(char_as_str);
         }
     }
 }
 
-void mainEventLoop() {
-    sceDisplayWaitVblankStart();
-    pspDebugScreenSetXY(0, 0);
-    printAllCellIdentifiers(DEBUG_COLS, DEBUG_ROWS);
+void printCellIdentifiersWithEmptyMiddle(int cols, int rows) {
+    int space_height = 3;
+    int space_width = 18;
+
+    char char_as_str[2];
+    char_as_str[0] = '0';
+    char_as_str[1] = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            char_as_str[0] += 1;
+            char_as_str[0] = (rand() % 26) + 65;
+            if (i == 0) { char_as_str[0] = '.'; }
+            else if (i == rows-1) { char_as_str[0] = '.'; }
+            if (j == 0) { char_as_str[0] = '.'; }
+            else if (j == cols-1) { char_as_str[0] = '.'; }
+            if (((rows/2) - space_height <= i && i <= (rows/2) + space_height) &&
+                ((cols/2) - space_width - 1 < j && j < (cols/2) + space_width + 1)) { char_as_str[0] = ' '; }
+            pspDebugScreenPrintf(char_as_str);
+        }
+    }
+}
+
+Screen curScreen = SCREEN_MAIN;
+
+void setScreen(Screen newScreen) {
+    curScreen = newScreen;
+}
+
+bool mainEventLoop() {
+    getNextInputs();
+    if (curScreen == SCREEN_MAIN) {
+        if (isPressed(controls.exit)) { setScreen(SCREEN_EXIT_CONFIRM); return true; }
+        sceDisplayWaitVblankStart();
+        pspDebugScreenSetXY(0, 0);
+        printAllCellIdentifiers(DEBUG_COLS, DEBUG_ROWS);
+    } else if (curScreen == SCREEN_EXIT_CONFIRM) {
+        if (isPressed(controls.menu_cancel)) { setScreen(SCREEN_MAIN); return true; }
+        if (isPressed(controls.menu_confirm)) { setScreen(SCREEN_EXIT); return true; }
+        sceDisplayWaitVblankStart();
+        pspDebugScreenSetXY(0, 0);
+        printCellIdentifiersWithEmptyMiddle(DEBUG_COLS, DEBUG_ROWS);
+    } else if (curScreen == SCREEN_EXIT) {
+        sceDisplayWaitVblankStart();
+        pspDebugScreenClear();
+        pspDebugScreenSetXY(0, 0);
+        pspDebugScreenPrintf("Exiting...");
+        sceKernelDelayThread(1000000);
+        return false;
+    }
+
+    return true;
 }
 
 int main() {
     initialise();
 
-    int running = isRunning();
+    bool running = isRunning();
     while (running) {
-        mainEventLoop();
-        running = isRunning();
+        running = mainEventLoop();
+        if (running) { isRunning(); } // TODO: does this cause slowdown?
     }
 
     deinitialise();
