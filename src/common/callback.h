@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
-int isRunning();
+bool isRunning();
 int setupExitCallback();

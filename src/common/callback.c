@@ -1,15 +1,17 @@
 #include <pspkernel.h>
+#include <stdbool.h>
+#include "callback.h"
 
-static int exitRequest = 0;
+static bool exitRequest = false;
 
-int isRunning() {
+bool isRunning() {
     return !exitRequest;
 }
 
 // Run when the user exits the game using the screen that shows up upon pressing
 // the Home/PS button.
 int exitCallback(int arg1, int arg2, void *common) {
-    exitRequest = 1;
+    exitRequest = true;
     return 0;
 }
 
