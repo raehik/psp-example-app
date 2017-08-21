@@ -1,0 +1,8 @@
+# PSP files
+EBOOT.PBP
+PARAM.SFO
+*.elf
+*.prx
+
+# C object files
+*.o
