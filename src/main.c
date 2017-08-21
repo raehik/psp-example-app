@@ -23,6 +23,7 @@ PSP_HEAP_SIZE_MAX();
 // convenient RGB -> decimal colour macro
 #define RGB(r, g, b) ((r)|((g)<<8)|((b)<<16))
 
+/// Various initialising/deinitialising {{{
 void setupDebugScreen() {
     pspDebugScreenInit();
     pspDebugScreenClearLineDisable();
@@ -37,6 +38,7 @@ void initialise() {
 void deinitialise() {
     sceKernelExitGame();
 }
+/// }}}
 
 void printAllCellIdentifiers(int cols, int rows) {
     char char_as_str[2];
