@@ -1,8 +1,8 @@
 #
 # Commented Makefile for PSP EBOOTS (applications).
 # Author: raehik
-# Date: 2017-08-16
-# Version: 1.2
+# Date: 2017-08-21
+# Version: 1.3
 #
 
 TARGET = hello-raehik
@@ -15,11 +15,6 @@ PSP_EBOOT_TITLE = hello-raehik
 #PSP_EBOOT_PIC1  = PIC1.png
 #PSP_EBOOT_SND0  = SND0.at3
 
-## EBOOT required {{{
-BUILD_PRX = 1
-EXTRA_TARGETS = EBOOT.PBP
-## }}}
-
 ## general {{{
 INCDIR   =
 CFLAGS   = -std=c11 -O2 -Wall -G0
@@ -29,6 +24,11 @@ ASFLAGS  = $(CFLAGS)
 LIBDIR  =
 LDFLAGS =
 LIBS    =
+## }}}
+
+## EBOOT required {{{
+BUILD_PRX = 1
+EXTRA_TARGETS = EBOOT.PBP
 ## }}}
 
 ## include master Makefile {{{
