@@ -1,7 +1,7 @@
+#include "debug-screen.h"
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspdisplay.h>
-
 #include <time.h>
 #include <stdlib.h>
 
@@ -51,6 +51,10 @@ void printCellIdentifiersWithEmptyMiddle(int cols, int rows, int space_height, i
             pspDebugScreenPrintf(char_as_str);
         }
     }
+}
+
+void debug_screen_print_msg(char *msg) {
+    pspDebugScreenPrintf(msg);
 }
 
 Screen curScreen = SCREEN_MAIN;
