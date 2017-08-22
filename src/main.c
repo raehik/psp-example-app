@@ -1,8 +1,10 @@
 #include <pspkernel.h>
 
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "common/callback.h"
+#include "log.h"
 #include "controls.h"
 #include "debug-screen.h"
 
@@ -20,10 +22,18 @@ PSP_HEAP_SIZE_MAX();
 #define RGB(r, g, b) ((r)|((g)<<8)|((b)<<16))
 
 /// Various initialising/deinitialising {{{
-void initialise() {
+bool initialise() {
     setupExitCallback();
     initControls();
+    if (!initLogging()) { return false; }
     setupDebugScreen();
+
+    char dir_name[100];
+    dir_name[99] = '\0';
+    getcwd(dir_name, 99);
+    log_debug("Hi!");
+    log_debug(dir_name);
+    return true;
 }
 
 void deinitialise() {
@@ -32,12 +42,12 @@ void deinitialise() {
 /// }}}
 
 int main() {
-    initialise();
+    if (!initialise()) { deinitialise(); return -1; }
 
     bool running = isRunning();
     while (running) {
         running = mainEventLoopDebugScreen();
-        if (running) { isRunning(); } // TODO: does this cause slowdown?
+        if (running) { running = isRunning(); } // TODO: does this cause slowdown?
     }
 
     deinitialise();
