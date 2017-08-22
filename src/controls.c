@@ -4,8 +4,8 @@
 
 struct Controls controls;
 
-SceCtrlData pad;
-SceCtrlData pad_prev;
+static SceCtrlData pad;
+static SceCtrlData pad_prev;
 
 void initControls() {
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
