@@ -32,6 +32,7 @@ bool log_msg(log_level level, char *msg) {
     else if (logger.level <= level) {
         int fd = sceIoOpen(logger.out, PSP_O_WRONLY | PSP_O_APPEND, 0777);
         sceIoWrite(fd, msg, strlen(msg));
+        sceIoWrite(fd, "\n", 1);
         sceIoClose(fd);
     }
     return true;
