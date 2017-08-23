@@ -18,37 +18,39 @@ void setupDebugScreen() {
 }
 
 void printAllCellIdentifiers(int cols, int rows) {
-    char char_as_str[2];
-    char_as_str[0] = '0';
-    char_as_str[1] = 0;
+    char cell_identifier[2];
+    cell_identifier[1] = '\0';
+
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            char_as_str[0] += 1;
-            char_as_str[0] = (rand() % 26) + 65;
-            if (i == 0)           { char_as_str[0] = '.'; }
-            else if (i == rows-1) { char_as_str[0] = '.'; }
-            if (j == 0)           { char_as_str[0] = '.'; }
-            else if (j == cols-1) { char_as_str[0] = '.'; }
-            pspDebugScreenPrintf(char_as_str);
+            if ((i == 0)|(i == rows-1)|(j == 0)|(j == cols-1)) {
+                cell_identifier[0] = '.';
+            } else {
+                cell_identifier[0] = (rand() % 26) + 65;
+            }
+            pspDebugScreenPrintf(cell_identifier);
         }
     }
 }
 
 void printCellIdentifiersWithEmptyMiddle(int cols, int rows, int space_height, int space_width) {
-    char char_as_str[2];
-    char_as_str[0] = '0';
-    char_as_str[1] = 0;
+    char cell_identifier[2];
+    cell_identifier[1] = '\0';
+
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            char_as_str[0] += 1;
-            char_as_str[0] = (rand() % 26) + 65;
-            if (i == 0) { char_as_str[0] = '.'; }
-            else if (i == rows-1) { char_as_str[0] = '.'; }
-            if (j == 0) { char_as_str[0] = '.'; }
-            else if (j == cols-1) { char_as_str[0] = '.'; }
-            if (((rows/2) - space_height <= i && i <= (rows/2) + space_height) &&
-                ((cols/2) - space_width - 1 < j && j < (cols/2) + space_width + 1)) { pspDebugScreenSetXY(pspDebugScreenGetX()+1, pspDebugScreenGetY()); continue; }
-            pspDebugScreenPrintf(char_as_str);
+            if ((i == 0)|(i == rows-1)|(j == 0)|(j == cols-1)) {
+                cell_identifier[0] = '.';
+            } else if (((rows/2) - space_height <= i && i <= (rows/2) + space_height) &&
+                       ((cols/2) - space_width - 1 < j && j < (cols/2) + space_width + 1)) {
+                // FIXME: will break if the "empty middle" is the entire screen
+                // because we don't set the Y if it rolls over to the next line
+                pspDebugScreenSetXY(pspDebugScreenGetX()+1, pspDebugScreenGetY());
+                continue;
+            } else {
+                cell_identifier[0] = (rand() % 26) + 65;
+            }
+            pspDebugScreenPrintf(cell_identifier);
         }
     }
 }
