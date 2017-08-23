@@ -87,8 +87,8 @@ bool mainEventLoopDebugScreen() {
         pspDebugScreenSetXY(0, 0);
         pspDebugScreenPrintf("Exiting...");
         sceKernelDelayThread(1000000);
+
         return false;
     }
-
     return true;
 }

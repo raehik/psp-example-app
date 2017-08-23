@@ -31,8 +31,8 @@ bool initialise() {
     char dir_name[100];
     dir_name[99] = '\0';
     getcwd(dir_name, 99);
-    log_debug("Hi!");
     log_debug(dir_name);
+
     return true;
 }
 
