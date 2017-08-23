@@ -9,7 +9,8 @@ static SceCtrlData pad_prev;
 
 void initControls() {
     sceCtrlSetSamplingMode(PSP_CTRL_MODE_ANALOG);
-    controls.exit = PSP_CTRL_LTRIGGER | PSP_CTRL_RTRIGGER | PSP_CTRL_UP | PSP_CTRL_TRIANGLE;
+    //controls.exit = PSP_CTRL_LTRIGGER | PSP_CTRL_RTRIGGER | PSP_CTRL_UP | PSP_CTRL_TRIANGLE;
+    controls.exit = PSP_CTRL_START | PSP_CTRL_CROSS;
     controls.menu_confirm = PSP_CTRL_CROSS;
     controls.menu_cancel = PSP_CTRL_CIRCLE;
     controls.menu_left = PSP_CTRL_LEFT;
