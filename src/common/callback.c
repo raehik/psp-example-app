@@ -2,6 +2,10 @@
 #include <stdbool.h>
 #include "callback.h"
 
+// TODO: why those values? initPriority and stackSize respectively
+#define INIT_PRIORITY 0x11
+#define STACK_SIZE 0xFA0
+
 static bool exitRequest = false;
 
 bool isRunning() {
@@ -27,14 +31,9 @@ int callbackThread(SceSize args, void *argp) {
 }
 
 int setupExitCallback() {
-    int threadID = 0;
-
-    // TODO: why those values? initPriority and stackSize respectively
-    threadID = sceKernelCreateThread("callback_update_thread", callbackThread, 0x11, 0xFA0, THREAD_ATTR_USER, NULL);
-
+    SceUID threadID = sceKernelCreateThread("callback_update_thread", callbackThread, INIT_PRIORITY, STACK_SIZE, 0, NULL);
     if (threadID >= 0) {
         sceKernelStartThread(threadID, 0, NULL);
     }
-
     return threadID;
 }
