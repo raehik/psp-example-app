@@ -10,7 +10,7 @@ OBJS   = src/main.o src/common/callback.o src/log.o src/controls.o src/debug-scr
 
 PSP_FW_VERSION = 661
 
-PSP_EBOOT_TITLE = hello-raehik v1.0.0
+PSP_EBOOT_TITLE = hello-raehik v1.1.0
 #PSP_EBOOT_ICON  = ICON0.png
 #PSP_EBOOT_PIC1  = PIC1.png
 #PSP_EBOOT_SND0  = SND0.at3
