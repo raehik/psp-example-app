@@ -2,14 +2,38 @@
 #include <pspkernel.h>
 #include <pspdebug.h>
 #include <pspdisplay.h>
+
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "controls.h"
 #include "screen.h"
 
+#define PATH_MAX MAXPATHLEN
 #define DEBUG_COLS 68
 #define DEBUG_ROWS 34
+
+char* itoa(int i, char b[]){
+    char const digit[] = "0123456789";
+    char* p = b;
+    if(i<0){
+        *p++ = '-';
+        i *= -1;
+    }
+    int shifter = i;
+    do{ //Move to where representation ends
+        ++p;
+        shifter = shifter/10;
+    }while(shifter);
+    *p = '\0';
+    do{ //Move back, inserting digits as u go
+        *--p = digit[i%10];
+        i = i/10;
+    }while(i);
+    return b;
+}
 
 void setupDebugScreen() {
     pspDebugScreenInit();
@@ -85,7 +109,18 @@ bool mainEventLoopDebugScreen() {
         sceDisplayWaitVblankStart();
         pspDebugScreenClear();
         pspDebugScreenSetXY(0, 0);
-        pspDebugScreenPrintf("Exiting...");
+        pspDebugScreenPrintf("Exiting...\n");
+        sceKernelDelayThread(1000000);
+
+        char dir_name[PATH_MAX];
+        char s[100];
+        itoa(PATH_MAX, s);
+        getcwd(dir_name, PATH_MAX);
+        pspDebugScreenPrintf("CWD: ");
+        pspDebugScreenPrintf(dir_name);
+        pspDebugScreenPrintf("\n");
+        pspDebugScreenPrintf("PATH_MAX: ");
+        pspDebugScreenPrintf(s);
         sceKernelDelayThread(1000000);
 
         return false;
