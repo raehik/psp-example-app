@@ -1,7 +1,6 @@
 #include <pspkernel.h>
 
 #include <stdbool.h>
-#include <unistd.h>
 
 #include "common/callback.h"
 #include "log.h"
@@ -25,13 +24,8 @@ PSP_HEAP_SIZE_MAX();
 bool initialise() {
     setupExitCallback();
     initControls();
-    if (!initLogging()) { return false; }
+    if (!initLogging(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
     setupDebugScreen();
-
-    char dir_name[100];
-    dir_name[99] = '\0';
-    getcwd(dir_name, 99);
-    log_debug(dir_name);
 
     return true;
 }
