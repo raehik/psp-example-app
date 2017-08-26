@@ -6,7 +6,7 @@
 #include "debug-screen.h"
 
 #define MAJOR_VER 1
-#define MINOR_VER 1
+#define MINOR_VER 2
 
 PSP_MODULE_INFO("PSP Example App", PSP_MODULE_USER, MAJOR_VER, MINOR_VER);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER);
