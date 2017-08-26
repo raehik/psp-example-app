@@ -118,11 +118,8 @@ bool debugscreen_main_event_loop() {
         char s[100];
         itoa(PATH_MAX, s);
         getcwd(dir_name, PATH_MAX);
-        pspDebugScreenPrintf("CWD: ");
-        pspDebugScreenPrintf(dir_name);
-        pspDebugScreenPrintf("\n");
-        pspDebugScreenPrintf("PATH_MAX: ");
-        pspDebugScreenPrintf(s);
+        pspDebugScreenPrintf("CWD: %s\n", dir_name);
+        pspDebugScreenPrintf("PATH_MAX: %s\n", s);
         sceKernelDelayThread(1000000);
 
         return false;
