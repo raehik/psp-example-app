@@ -1,5 +1,6 @@
 #pragma once
+
 #include <stdbool.h>
 
-bool isRunning();
-int setupExitCallback();
+bool is_running();
+int callback_init();

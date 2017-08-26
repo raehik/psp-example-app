@@ -20,7 +20,7 @@ PSP_HEAP_SIZE_MAX();
 
 /// Various initialising/deinitialising {{{
 bool initialise() {
-    setupExitCallback();
+    callback_init();
     controls_init();
     if (!logging_init(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
     debugscreen_init();
@@ -37,10 +37,10 @@ void deinitialise() {
 int main() {
     if (!initialise()) { deinitialise(); return -1; }
 
-    bool running = isRunning();
+    bool running = is_running();
     while (running) {
         running = debugscreen_main_event_loop();
-        if (running) { running = isRunning(); } // TODO: does this cause slowdown?
+        if (running) { running = is_running(); } // TODO: does this cause slowdown?
     }
 
     deinitialise();

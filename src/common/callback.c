@@ -6,23 +6,23 @@
 #define INIT_PRIORITY 0x11
 #define STACK_SIZE 0xFA0
 
-static bool exitRequest = false;
+static bool exit_request = false;
 
-bool isRunning() {
-    return !exitRequest;
+bool is_running() {
+    return !exit_request;
 }
 
 // Run when the user exits the game using the screen that shows up upon pressing
 // the Home/PS button.
-int exitCallback(int arg1, int arg2, void *common) {
-    exitRequest = true;
+int exit_callback(int arg1, int arg2, void *common) {
+    exit_request = true;
     return 0;
 }
 
-int callbackThread(SceSize args, void *argp) {
+int callback_thread(SceSize args, void *argp) {
     int callbackID;
 
-    callbackID = sceKernelCreateCallback("exit_callback", exitCallback, NULL);
+    callbackID = sceKernelCreateCallback("exit_callback", exit_callback, NULL);
     sceKernelRegisterExitCallback(callbackID);
 
     sceKernelSleepThreadCB();
@@ -30,8 +30,8 @@ int callbackThread(SceSize args, void *argp) {
     return 0;
 }
 
-int setupExitCallback() {
-    SceUID threadID = sceKernelCreateThread("callback_update_thread", callbackThread, INIT_PRIORITY, STACK_SIZE, 0, NULL);
+int callback_init() {
+    SceUID threadID = sceKernelCreateThread("callback_update_thread", callback_thread, INIT_PRIORITY, STACK_SIZE, 0, NULL);
     if (threadID >= 0) {
         sceKernelStartThread(threadID, 0, NULL);
     }
