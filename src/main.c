@@ -20,9 +20,9 @@ PSP_HEAP_SIZE_MAX();
 
 /// Various initialising/deinitialising {{{
 bool initialise() {
+    if (!logging_init(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
     callback_init();
     controls_init();
-    if (!logging_init(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
     debugscreen_init();
 
     return true;
