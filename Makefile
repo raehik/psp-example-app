@@ -35,3 +35,11 @@ EXTRA_TARGETS = EBOOT.PBP
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
 ## }}}
+
+## Doxygen {{{
+clean: doxygen-clean
+doxygen-clean:
+	rm -rf docs
+docs:
+	doxygen
+## }}}
