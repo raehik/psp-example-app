@@ -11,7 +11,7 @@ static struct {
 
 
 // TODO: replace magic number file descriptor number? (must be 0 or +ve int)
-bool initLogging(log_level level, char *out) {
+bool logging_init(log_level level, char *out) {
     logger.level = level;
     logger.out = out;
     logger.prefix = "test: ";
@@ -25,7 +25,13 @@ bool initLogging(log_level level, char *out) {
     } else {
         sceIoClose(fd);
     }
+
+    log_debug("logging: initialised");
     return true;
+}
+
+void logging_deinit() {
+    log_debug("logging: deinitialised");
 }
 
 // TODO: efficiency concerns:

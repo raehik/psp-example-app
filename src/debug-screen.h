@@ -2,6 +2,6 @@
 
 #include <stdbool.h>
 
-void setupDebugScreen();
-bool mainEventLoopDebugScreen();
-void debug_screen_print_msg(char *msg);
+void debugscreen_init();
+bool debugscreen_main_event_loop();
+void debugscreen_print_msg(char *msg);

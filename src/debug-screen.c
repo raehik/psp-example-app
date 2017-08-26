@@ -10,6 +10,7 @@
 
 #include "controls.h"
 #include "screen.h"
+#include "log.h"
 
 #define PATH_MAX MAXPATHLEN
 #define DEBUG_COLS 68
@@ -35,10 +36,11 @@ char* itoa(int i, char b[]){
     return b;
 }
 
-void setupDebugScreen() {
+void debugscreen_init() {
     pspDebugScreenInit();
     pspDebugScreenClearLineDisable();
     srand(time(NULL));
+    log_debug("debug screen: initialised");
 }
 
 void printAllCellIdentifiers(int cols, int rows) {
@@ -79,27 +81,27 @@ void printCellIdentifiersWithEmptyMiddle(int cols, int rows, int space_height, i
     }
 }
 
-void debug_screen_print_msg(char *msg) {
+void debugscreen_print_msg(char *msg) {
     pspDebugScreenPrintf(msg);
 }
 
 Screen curScreen = SCREEN_MAIN;
 
 void setScreen(Screen newScreen) {
-        pspDebugScreenClear();
-            curScreen = newScreen;
+    pspDebugScreenClear();
+    curScreen = newScreen;
 }
 
-bool mainEventLoopDebugScreen() {
-    getNextInputs();
+bool debugscreen_main_event_loop() {
+    controls_get_next_inputs();
     if (curScreen == SCREEN_MAIN) {
-        if (isPressed(controls.exit)) { setScreen(SCREEN_EXIT_CONFIRM); return true; }
+        if (controls_combo_is_pressed(controls.exit)) { setScreen(SCREEN_EXIT_CONFIRM); return true; }
         sceDisplayWaitVblankStart();
         pspDebugScreenSetXY(0, 0);
         printAllCellIdentifiers(DEBUG_COLS, DEBUG_ROWS);
     } else if (curScreen == SCREEN_EXIT_CONFIRM) {
-        if (isPressed(controls.menu_cancel)) { setScreen(SCREEN_MAIN); return true; }
-        if (isPressed(controls.menu_confirm)) { setScreen(SCREEN_EXIT); return true; }
+        if (controls_combo_is_pressed(controls.menu_cancel)) { setScreen(SCREEN_MAIN); return true; }
+        if (controls_combo_is_pressed(controls.menu_confirm)) { setScreen(SCREEN_EXIT); return true; }
         sceDisplayWaitVblankStart();
         pspDebugScreenSetXY(0, 0);
         printCellIdentifiersWithEmptyMiddle(DEBUG_COLS, DEBUG_ROWS, 1, 16);

@@ -1,7 +1,5 @@
 #include <pspkernel.h>
-
 #include <stdbool.h>
-
 #include "common/callback.h"
 #include "log.h"
 #include "controls.h"
@@ -23,14 +21,15 @@ PSP_HEAP_SIZE_MAX();
 /// Various initialising/deinitialising {{{
 bool initialise() {
     setupExitCallback();
-    initControls();
-    if (!initLogging(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
-    setupDebugScreen();
+    controls_init();
+    if (!logging_init(LOG_LEVEL_DEBUG, "ms0:/testlog.txt")) { return false; }
+    debugscreen_init();
 
     return true;
 }
 
 void deinitialise() {
+    logging_deinit();
     sceKernelExitGame();
 }
 /// }}}
@@ -40,7 +39,7 @@ int main() {
 
     bool running = isRunning();
     while (running) {
-        running = mainEventLoopDebugScreen();
+        running = debugscreen_main_event_loop();
         if (running) { running = isRunning(); } // TODO: does this cause slowdown?
     }
 
